@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#1c2437">
+  <meta name="description" content="ちゃわん娘の写真アルバム。思い出をいつでも、どこでも。">
+  <title>ちゃわん娘アルバム</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <div id="login" class="login-screen">
+    <div class="login-decor login-decor-a" aria-hidden="true"></div>
+    <div class="login-decor login-decor-b" aria-hidden="true"></div>
+    <main class="login-panel">
+      <div class="brand-mark" aria-hidden="true"><span>茶</span></div>
+      <span class="eyebrow login-eyebrow">PRIVATE PHOTO ALBUM</span>
+      <h1>ちゃわん娘<br><em>アルバム</em></h1>
+      <p class="login-description">思い出の写真を、ここに。<br>合言葉を入力してアルバムを開いてね。</p>
+      <form id="loginForm" class="login-form" autocomplete="off">
+        <label for="password">合言葉</label>
+        <div class="password-wrap">
+          <input id="password" type="password" placeholder="合言葉を入力" autocomplete="off" required>
+          <button type="button" id="togglePassword" class="reveal-button" aria-label="合言葉を表示する">表示</button>
+        </div>
+        <p id="loginError" class="form-error" role="alert" aria-live="polite"></p>
+        <button type="submit" class="main-button login-submit">アルバムを開く <span aria-hidden="true">→</span></button>
+      </form>
+      <p class="login-foot">CHAWANMUSUME · MEMORY COLLECTION</p>
+    </main>
+  </div>
+
+  <div id="site" class="site hidden">
+    <header class="site-header">
+      <a class="header-brand" href="#" id="homeLink" aria-label="アルバムトップへ">
+        <span class="header-symbol" aria-hidden="true">茶</span>
+        <span class="header-brand-title">ちゃわん娘<span>アルバム</span></span>
+      </a>
+      <button type="button" id="lockButton" class="outline-button header-lock" aria-label="アルバムを閉じる">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+        閉じる
+      </button>
+    </header>
+
+    <main>
+      <section id="homeView" class="view">
+        <div class="hero">
+          <div class="hero-bloom hero-bloom-one" aria-hidden="true"></div>
+          <div class="hero-bloom hero-bloom-two" aria-hidden="true"></div>
+          <div class="hero-content">
+            <span class="eyebrow light-eyebrow">MOMENTS & MEMORIES</span>
+            <h1>あの日の一瞬を、<br>いつまでも。</h1>
+            <p>ちゃわん娘の思い出を集めた、<br class="mobile-break">小さなフォトアルバム。</p>
+          </div>
+          <div class="hero-ring" aria-hidden="true"><span>茶</span></div>
+        </div>
+        <div class="container album-section">
+          <div class="section-heading">
+            <div>
+              <span class="eyebrow">ALBUM COLLECTION</span>
+              <h2>アルバム一覧</h2>
+            </div>
+            <span id="albumCount" class="count-pill">読み込み中</span>
+          </div>
+          <div id="homeNotice" class="notice hidden" role="status"></div>
+          <div id="albumGrid" class="album-grid" aria-live="polite">
+            <div class="loading-state"><span class="spinner"></span> アルバムを読み込んでいます</div>
+          </div>
+          <p class="section-caption">フォルダを選ぶと写真を見られます。</p>
+        </div>
+      </section>
+
+      <section id="albumView" class="view hidden">
+        <div class="container gallery-container">
+          <button id="backButton" class="back-button" type="button"><span aria-hidden="true">←</span> アルバム一覧へ</button>
+          <div class="gallery-heading">
+            <div class="gallery-title-wrap">
+              <span class="eyebrow">PHOTO ALBUM</span>
+              <h1 id="galleryTitle">アルバム</h1>
+              <p id="galleryCount">写真を読み込んでいます</p>
+            </div>
+            <button id="galleryBulk" type="button" class="main-button gallery-bulk" disabled>
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M4 16v4h16v-4"/></svg>
+              まとめて保存
+            </button>
+          </div>
+          <div id="galleryNotice" class="notice hidden" role="status"></div>
+          <div id="photoGrid" class="photo-grid" aria-live="polite"></div>
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer">CHAWANMUSUME PHOTO ALBUM <span>✦</span> MADE FOR MEMORIES</footer>
+  </div>
+
+  <div id="viewer" class="viewer hidden" role="dialog" aria-modal="true" aria-label="写真のプレビュー" tabindex="-1">
+    <div class="viewer-topbar">
+      <span id="viewerPosition" class="viewer-position">1 / 1</span>
+      <button id="viewerClose" class="viewer-icon-button" type="button" aria-label="プレビューを閉じる">✕</button>
+    </div>
+    <div class="viewer-stage" id="viewerStage">
+      <button id="viewerPrev" class="viewer-nav viewer-prev" aria-label="前の写真" type="button">‹</button>
+      <img id="viewerImage" alt="写真のプレビュー">
+      <button id="viewerNext" class="viewer-nav viewer-next" aria-label="次の写真" type="button">›</button>
+    </div>
+    <div class="viewer-bottom">
+      <p id="viewerFilename" class="viewer-filename"></p>
+      <button id="viewerDownload" type="button" class="main-button viewer-download">
+        <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M4 16v4h16v-4"/></svg>
+        この写真をダウンロード
+      </button>
+      <p class="viewer-tip">スマホではダウンロードした写真が「ファイル」に保存される場合があります。</p>
+    </div>
+  </div>
+
+  <div id="bulkModal" class="dialog-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="bulkTitle">
+    <div class="dialog-card">
+      <button id="bulkClose" class="dialog-close" type="button" aria-label="閉じる">✕</button>
+      <div class="dialog-icon" aria-hidden="true">↓</div>
+      <span class="eyebrow">SAVE YOUR MEMORIES</span>
+      <h2 id="bulkTitle">まとめてダウンロード</h2>
+      <p id="bulkDescription">保存方法を選んでください。</p>
+      <button id="bulkIndividual" class="download-choice" type="button">
+        <span class="choice-main"><strong>写真を1枚ずつ保存</strong><small>写真ごとにファイルをダウンロード</small></span><span class="choice-arrow">→</span>
+      </button>
+      <button id="bulkZip" class="download-choice" type="button">
+        <span class="choice-main"><strong>ZIPでまとめて保存</strong><small>スマホで確実にまとめるならこちら</small></span><span class="choice-arrow">→</span>
+      </button>
+      <p class="dialog-note">※スマホ・ブラウザによっては連続ダウンロードが制限されます。その場合はZIPをご利用ください。</p>
+    </div>
+  </div>
+
+  <div id="progressModal" class="dialog-overlay hidden" role="status" aria-live="polite">
+    <div class="progress-card">
+      <span class="spinner dark-spinner"></span>
+      <h2 id="progressTitle">保存の準備中…</h2>
+      <p id="progressText">写真を取得しています</p>
+      <div class="progress-track"><div id="progressBar" class="progress-bar"></div></div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+</body>
+</html>
